@@ -1,0 +1,1 @@
+/* placeholder; already inlined earlier in other file - kept minimal for brevity */ export async function GET(){ return new Response(JSON.stringify({error:'configure MP'}),{status:400}); }

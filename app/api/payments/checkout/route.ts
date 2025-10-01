@@ -1,0 +1,1 @@
+export { GET } from '@/app/api/__src/payments_checkout';
