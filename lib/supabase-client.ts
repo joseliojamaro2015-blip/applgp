@@ -10,16 +10,14 @@ export function getSupabase() {
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !anon) {
-    // Durante o build/SSR, não quebre ao importar o módulo
+    // Durante build/SSR, não quebre ao importar
     if (typeof window === 'undefined') {
-      // retorna um proxy que só lança se alguém tentar usar no servidor
       return new Proxy({} as SupabaseClient, {
         get() {
           throw new Error('Supabase: variáveis de ambiente faltando no servidor/build');
         },
       }) as SupabaseClient;
     }
-    // No browser, avise claramente
     throw new Error('Supabase: variáveis de ambiente faltando');
   }
 
