@@ -10,16 +10,30 @@ export default function Login() {
 
   async function sendLink(e: any) {
     e.preventDefault();
-    const supabase = getSupabase();
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo:
-          (process.env.NEXT_PUBLIC_SITE_URL || location.origin) + '/dashboard',
-      },
-    });
-    if (!error) setSent(true);
-    else alert(error.message);
+    try {
+      const supabase = getSupabase();
+      const redirectTo = `${window.location.origin}/dashboard`;
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: redirectTo },
+      });
+
+      // alguns provedores retornam 204 sem JSON; trate como sucesso
+      if (!error) {
+        setSent(true);
+        return;
+      }
+      alert(error.message);
+    } catch (err: any) {
+      const msg = String(err?.message || err);
+      if (msg.includes('Unexpected end of JSON input')) {
+        // resposta sem corpo (204) => ok
+        setSent(true);
+        return;
+      }
+      console.error('OTP error:', err);
+      alert(msg);
+    }
   }
 
   return (
@@ -34,7 +48,7 @@ export default function Login() {
         />
         <button className="btn btn-primary">Enviar link mágico</button>
       </form>
-      {sent && <p>Link enviado!</p>}
+      {sent && <p className="mt-2 text-green-700 text-sm">Link enviado! Verifique seu e-mail.</p>}
     </div>
   );
 }
