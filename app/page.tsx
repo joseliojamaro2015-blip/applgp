@@ -1,25 +1,14 @@
-'use client';
-export const dynamic = 'force-dynamic';
-
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { getSupabase } from '@/lib/supabase-client';
-
 export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    (async () => {
-      const supabase = getSupabase();
-      const { data } = await supabase.auth.getSession();
-      if (data.session) router.replace('/dashboard');
-      else router.replace('/login');
-    })();
-  }, [router]);
-
   return (
     <div className="min-h-[60vh] grid place-items-center">
-      <p className="text-sm text-slate-500">Carregando…</p>
+      <div className="text-center">
+        <h1 className="text-2xl font-semibold">Clube Gym Pass</h1>
+        <p className="text-slate-600 mt-2">Bem-vindo! Acesse sua conta para continuar.</p>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <a href="/login" className="btn btn-primary">Entrar</a>
+          <a href="/login" className="btn border">Criar conta</a>
+        </div>
+      </div>
     </div>
   );
 }
